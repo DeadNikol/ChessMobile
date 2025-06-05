@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/MainFragment">
+
+    <fragment
+        android:id="@+id/chessFragment"
+        android:name="com.example.mychess.fragments.chessFragment"
+        android:label="Шахматная партия"
+        tools:layout="@layout/fragment_chess"/>
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="com.example.mychess.fragments.MainFragment"
+        android:label="Шахматы"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_MainFragment_to_chessFragment"
+            app:destination="@id/chessFragment" />
+        <action
+            android:id="@+id/action_MainFragment_to_savesFragment"
+            app:destination="@id/savesFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/savesFragment"
+        android:name="com.example.mychess.fragments.SavesFragment"
+        android:label="Запись шахматной партии"
+        tools:layout="@layout/fragment_saves"/>
+
+</navigation>
