@@ -51,10 +51,6 @@ class ChangePawnToAnotherFigureDialog(val viewModel: MainActivityViewModel, val 
             }
             else{ //Если чёрные довели пешку, показываем чёрные фигуры
                 if(rotateBlackFigures){
-//                    imbtnQueen.rotationX = 180f
-//                    imbtnBishop.rotationX = 180f
-//                    imbtnKnight.rotationX = 180f
-//                    imbtnRook.rotationX = 180f
                     binding.root.rotationX = 180f
                 }
                 imbtnQueen.setBackgroundResource(R.drawable.black_queen)

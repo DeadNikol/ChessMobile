@@ -27,6 +27,7 @@ import androidx.sqlite.SQLITE_DATA_INTEGER
 import com.example.mychess.MainActivity
 import com.example.mychess.R
 import com.example.mychess.alertdialog.ChangePawnToAnotherFigureDialog
+import com.example.mychess.alertdialog.ConfirmationToCreateNewGame
 import com.example.mychess.databinding.FragmentChessBinding
 import com.example.mychess.figures.Figure
 import com.example.mychess.figures.Plate
@@ -170,6 +171,7 @@ class chessFragment : Fragment() {
             binding.tvDifferenceInPawns.text = it.toString()
         }
 
+        //При шахе делаем экран красным
         check.observe(viewLifecycleOwner) { it ->
             if (!it) {
                 binding.root.background = null
@@ -295,74 +297,9 @@ class chessFragment : Fragment() {
         //Расстваляем фигуры для начала партии
         binding.btnToNewGame.setOnClickListener {
 
-            viewModelForRoom.deleteAll()
+            ConfirmationToCreateNewGame(viewModel, viewModelForRoom, allPlates, sharedPreferences).show(parentFragmentManager, "confirmation")
 
-            //Статистика фигур каждой стороны
-            viewModel.getWhiteFigures().value = mutableMapOf(
-                Figure.PAWN to 8, Figure.ROOK to 2,
-                Figure.KNIGHT to 2, Figure.BISHOP to 2, Figure.QUEEN to 1, Figure.KING to 1
-            )
-            viewModel.getBlackFigures().value = mutableMapOf(
-                Figure.PAWN to 8, Figure.ROOK to 2,
-                Figure.KNIGHT to 2, Figure.BISHOP to 2, Figure.QUEEN to 1, Figure.KING to 1
-            )
 
-            viewModel.getMovedBefore().value =
-                mutableListOf(false, false, false, false, false, false)
-            //Расстановка фигур
-            allPlates.forEachIndexed { index, it ->
-                when (it.row) {
-                    1 -> {
-                        it.sight = Sight.WHITE
-                        when (it.column) {
-                            1, 8 -> it.figure = Figure.ROOK
-                            2, 7 -> it.figure = Figure.KNIGHT
-                            3, 6 -> it.figure = Figure.BISHOP
-                            4 -> it.figure = Figure.QUEEN
-                            5 -> it.figure = Figure.KING
-                        }
-                    }
-
-                    2 -> {
-                        it.sight = Sight.WHITE
-                        it.figure = Figure.PAWN
-                    }
-
-                    8 -> {
-                        it.sight = Sight.BLACK
-                        when (it.column) {
-                            1, 8 -> it.figure = Figure.ROOK
-                            2, 7 -> it.figure = Figure.KNIGHT
-                            3, 6 -> it.figure = Figure.BISHOP
-                            4 -> it.figure = Figure.QUEEN
-                            5 -> it.figure = Figure.KING
-                        }
-                    }
-
-                    7 -> {
-                        it.sight = Sight.BLACK
-                        it.figure = Figure.PAWN
-                    }
-
-                    else -> {
-                        it.sight = Sight.NONE
-                        it.figure = Figure.NONE
-                    }
-                }
-                it.update(sharedPreferences)
-                viewModelForRoom.addOldPlate(
-                    OldPlate(
-                        index,
-                        it.figure.value,
-                        it.sight.value
-                    )
-                ) //Если я создал игру заново, то записываю все фигуры заново
-            }
-
-            //Право хода
-            viewModel.getPlayersTurn().value = Sight.WHITE
-
-            viewModel.getTurns().value = 1
         }
 
 

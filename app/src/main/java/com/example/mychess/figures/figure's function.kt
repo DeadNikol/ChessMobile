@@ -56,7 +56,7 @@ fun checkMoves(
             }
             newAllPlates[oldPlate.getPlateId()].apply {
                 sight = Sight.NONE
-                figure = Figure.NONE
+                figure = NONE
             }
             return !(attackableInTheory(
                 newAllPlates,
@@ -395,7 +395,7 @@ fun checkMoves(
 
 
             //Если походили ладьёй или короолём - лишаем их возможности к рокировке
-            if (chosenPlate.figure == Figure.KING || chosenPlate.figure == Figure.ROOK) {
+            if (chosenPlate.figure == KING || chosenPlate.figure == ROOK) {
                 when (chosenPlate.getPlateId()) {
                     0 -> viewModel.getMovedBefore().value!![4] = true
                     4 -> viewModel.getMovedBefore().value!![3] = true
@@ -408,14 +408,14 @@ fun checkMoves(
 
 
             //Проверяем, не можем ли мы превратить пешку
-            if ((row == 8 || row == 1) && chosenPlate.figure == Figure.PAWN) {
+            if ((row == 8 || row == 1) && chosenPlate.figure == PAWN) {
                 //Такой хитрый способ нужен затем, что бы клик за пределами всплывающего окна не вызывал его закрытие
                 val q = ChangePawnToAnotherFigureDialog(viewModel, sharedPreferences.getBoolean("reverseBlackPawn", false))
                 q.isCancelable = false
                 q.show(supportFragmentManager, "RadioButtons")
             }
             //При хождении на 2 поля пешкой, делаем возможным взять её на проходе
-            if (abs(row - chosenPlate.row) == 2 && chosenPlate.figure == Figure.PAWN) {
+            if (abs(row - chosenPlate.row) == 2 && chosenPlate.figure == PAWN) {
                 allPlates[plate.getPlateId() + 8 * chosenPlate.sight.value].apply {
                     enPassant = chosenPlate.sight
                     enPassantTurn = actualTurn
@@ -423,7 +423,7 @@ fun checkMoves(
                 }
             }
             //При хождении на 2 поля королём, передвигаем ладью
-            if (abs(column - chosenPlate.column) == 2 && chosenPlate.figure == Figure.KING) {
+            if (abs(column - chosenPlate.column) == 2 && chosenPlate.figure == KING) {
                 val oldRookPlate = mutableListOf<Plate>()
                 val newRookPlate = mutableListOf<Plate>()
                 if (column - chosenPlate.column < 0) {
@@ -493,9 +493,8 @@ fun checkMoves(
             val cpF = chosenPlate.figure
             val cpS = chosenPlate.sight
 
-
             //Если походили ладьёй или короолём - лишаем их возможности к рокировке
-            if (chosenPlate.figure == Figure.KING || chosenPlate.figure == Figure.ROOK)
+            if (chosenPlate.figure == KING || chosenPlate.figure == ROOK)
                 when (chosenPlate.getPlateId()) {
                     0 -> viewModel.getMovedBefore().value!![1] = true
                     4 -> viewModel.getMovedBefore().value!![0] = true
@@ -504,7 +503,7 @@ fun checkMoves(
                     60 -> viewModel.getMovedBefore().value!![3] = true
                     63 -> viewModel.getMovedBefore().value!![5] = true
                 }
-            if ((row == 8 || row == 1) && chosenPlate.figure == Figure.PAWN) { //Проверяем, не можем ли мы превратить пешку
+            if ((row == 8 || row == 1) && chosenPlate.figure == PAWN) { //Проверяем, не можем ли мы превратить пешку
                 //Такой хитрый способ нужен затем, что бы клик за пределами всплывающего окна не вызывал его закрытие
                 val q = ChangePawnToAnotherFigureDialog(viewModel, sharedPreferences.getBoolean("reverseBlackPawn", false))
                 q.isCancelable = false
@@ -532,7 +531,7 @@ fun checkMoves(
                             with(allPlates[plate.getPlateId() + 8 * chosenPlate.sight.value]) {
                                 removeFigure()
                                 with(viewModel.getBlackFigures()) {
-                                    value!![Figure.PAWN] = value!![Figure.PAWN]!! - 1
+                                    value!![PAWN] = value!![PAWN]!! - 1
                                 }
                                 //Убираем эту пешку из памяти
                                 viewModelForRoom.addOldPlate(OldPlate(getPlateId(), figure.value, sight.value))
@@ -570,10 +569,10 @@ fun checkMoves(
             changePlayersTurn(plate.sight, viewModel) // Отдаём право хода другой стороне
 
             //Проверяем условия окончания игры
-            if (viewModel.getWhiteFigures().value!![Figure.KING] == 0) {
+            if (viewModel.getWhiteFigures().value!![KING] == 0) {
                 viewModel.getEndGame().value = Sight.BLACK
             }
-            if (viewModel.getBlackFigures().value!![Figure.KING] == 0) {
+            if (viewModel.getBlackFigures().value!![KING] == 0) {
                 viewModel.getEndGame().value = Sight.WHITE
             }
             //Проверяем поля под атакой
@@ -609,13 +608,13 @@ fun checkMoves(
     //Сами ходы
     if (plate.sight == playersTurn) {
         when (plate.figure) {
-            Figure.PAWN -> pawnMoves()
-            Figure.ROOK -> rookMoves()
-            Figure.KNIGHT -> knightMoves()
-            Figure.BISHOP -> bishopMoves()
-            Figure.QUEEN -> queenMoves()
-            Figure.KING -> kingMoves()
-            Figure.NONE -> null
+            PAWN -> pawnMoves()
+            ROOK -> rookMoves()
+            KNIGHT -> knightMoves()
+            BISHOP -> bishopMoves()
+            QUEEN -> queenMoves()
+            KING -> kingMoves()
+            NONE -> null
         }
     }
 
@@ -653,8 +652,8 @@ fun checkmate(
         val column = plate.column
         if (plate.sight == playersTurn) {
             when (plate.figure) {
-                Figure.NONE -> null
-                Figure.PAWN -> {
+                NONE -> null
+                PAWN -> {
                     //Проверка доступных ходов для перемещения
                     when (plate.row) {
                         2, 7 -> {
@@ -745,7 +744,7 @@ fun checkmate(
 
                 }
 
-                Figure.ROOK -> {
+                ROOK -> {
                     val direction = listOf(
                         (row + 1..8),
                         (1..row - 1).reversed(),
@@ -785,7 +784,7 @@ fun checkmate(
                     }
                 }
 
-                Figure.KNIGHT -> {
+                KNIGHT -> {
 
                     for (i in intArrayOf(-1, 1)) {
                         for (j in intArrayOf(-1, 1)) {
@@ -822,7 +821,7 @@ fun checkmate(
                     }
                 }
 
-                Figure.BISHOP -> {
+                BISHOP -> {
                     val borders = 1..8
 
                     for (flag in 1..4) {
@@ -876,7 +875,7 @@ fun checkmate(
                     }
                 }
 
-                Figure.QUEEN -> {
+                QUEEN -> {
                     //Проверка по горизонтали
                     val direction = listOf(
                         (plate.row + 1..8),
@@ -963,7 +962,7 @@ fun checkmate(
                     }
                 }
 
-                Figure.KING -> {
+                KING -> {
                     for (i in intArrayOf(-1, 0, 1)) {
                         for (j in intArrayOf(-1, 0, 1)) {
                             if (!(i == 0 && j == 0)) {
@@ -1068,8 +1067,8 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
     allPlate.forEach { plate ->
         val sight = plate.sight
         when (plate.figure) {
-            Figure.NONE -> null
-            Figure.PAWN -> {//Проверка на атаки
+            NONE -> null
+            PAWN -> {//Проверка на атаки
                 for (i in intArrayOf(-1, 1)) {
                     val nextPlateColumn = plate.column + i
                     if (nextPlateColumn in 1..8 && plate.row + 1 * sight.value in 1..8) {
@@ -1083,7 +1082,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
                 }
             }
 
-            Figure.ROOK -> {
+            ROOK -> {
                 val direction = listOf(
                     (plate.row + 1..8),
                     (1..plate.row - 1).reversed(),
@@ -1119,7 +1118,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
                 }
             }
 
-            Figure.KNIGHT -> {
+            KNIGHT -> {
                 for (i in intArrayOf(-1, 1)) {
                     for (j in intArrayOf(-1, 1)) {
                         fun check(row: Int, column: Int) {
@@ -1142,7 +1141,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
                 }
             }
 
-            Figure.BISHOP -> {
+            BISHOP -> {
 
                 val borders = 1..8
                 val row = plate.row
@@ -1195,7 +1194,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
                 }
             }
 
-            Figure.QUEEN -> {
+            QUEEN -> {
                 //Проверка по горизонтали
                 val direction = listOf(
                     (plate.row + 1..8),
@@ -1282,7 +1281,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
                 }
             }
 
-            Figure.KING -> {
+            KING -> {
 
                 for (i in intArrayOf(-1, 0, 1)) {
                     for (j in intArrayOf(-1, 0, 1)) {
@@ -1300,7 +1299,7 @@ fun attackableInTheory(allPlate: List<Plate>, viewModel: MainActivityViewModel):
 
     //Смотрим, не под шахом ли король
     allPlate.forEach { it ->
-        if (it.figure == Figure.KING) {
+        if (it.figure == KING) {
             when (it.sight) {
                 Sight.WHITE -> {
                     if (it.canBeAttackedByBlack && viewModel.getCheck().value != Sight.BLACK) {
@@ -1377,13 +1376,13 @@ fun countFiguresInPawns(map: MutableMap<Figure, Int>):Int{
     var count = 0
     map.forEach { it->
         when (it.key){
-            Figure.NONE -> null
-            Figure.PAWN -> count += it.value
-            Figure.ROOK -> count += it.value * 5
-            Figure.KNIGHT -> count += it.value * 3
-            Figure.BISHOP -> count += it.value * 3
-            Figure.QUEEN -> count += it.value * 10
-            Figure.KING -> null
+            NONE -> null
+            PAWN -> count += it.value
+            ROOK -> count += it.value * 5
+            KNIGHT -> count += it.value * 3
+            BISHOP -> count += it.value * 3
+            QUEEN -> count += it.value * 10
+            KING -> null
         }
     }
     return count
