@@ -503,7 +503,20 @@ fun checkMoves(
                     60 -> viewModel.getMovedBefore().value!![3] = true
                     63 -> viewModel.getMovedBefore().value!![5] = true
                 }
-            if ((row == 8 || row == 1) && chosenPlate.figure == PAWN) { //Проверяем, не можем ли мы превратить пешку
+            //Если мы съели ладью - лишаем её возможности к рокировке
+            if (plate.figure == ROOK){
+                val id = when(plate.getPlateId()){
+                    0 -> 4
+                    7 -> 5
+                    63 -> 2
+                    56 -> 1
+                    else -> 0
+                }
+                viewModel.getMovedBefore().value!![id] = true
+            }
+
+            //Проверяем, не можем ли мы превратить пешку
+            if ((row == 8 || row == 1) && chosenPlate.figure == PAWN) {
                 //Такой хитрый способ нужен затем, что бы клик за пределами всплывающего окна не вызывал его закрытие
                 val q = ChangePawnToAnotherFigureDialog(viewModel, sharedPreferences.getBoolean("reverseBlackPawn", false))
                 q.isCancelable = false
